@@ -41,7 +41,8 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file_url = url_for('uploaded_file', filename=filename)
-            return html + '<br><img src=' + file_url + '>'
+            return html + '<embed src=\"{}\" type=\"application/pdf\"   height=\"800px\" width=\"100%\">'.format(file_url)
+            #return html + '<br><img src=' + file_url + '>'
     return html
 
 
