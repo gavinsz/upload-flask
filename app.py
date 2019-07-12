@@ -40,7 +40,11 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            file_url = url_for('uploaded_file', filename=filename)
+            pdf_file = filename + '.pdf'
+            cmd = 'curl --form file=@{} http://localhost:5000/unoconv/pdf/ > {}'.format(filename, pdf_file)
+            ret = os.popen(cmd).readlines()
+            print('exec cmd %s|ret=%s'%(cmd, ret))
+            file_url = url_for('uploaded_file', filename=pdf_file)
             return html + '<embed src=\"{}\" type=\"application/pdf\"   height=\"800px\" width=\"100%\">'.format(file_url)
             #return html + '<br><img src=' + file_url + '>'
     return html
