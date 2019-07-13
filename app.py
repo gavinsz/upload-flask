@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
+import uuid
+import calendar,time
 from flask import Flask, request, url_for, send_from_directory, render_template, redirect
 from werkzeug import secure_filename
 from flask_redis import FlaskRedis
@@ -72,7 +74,7 @@ def upload_file():
             print('exec cmd %s|ret=%s'%(cmd, ret))
             file_url = url_for('uploaded_file', filename=pdf_file)
             #return html + '<embed src=\"{}\" type=\"application/pdf\"   height=\"800px\" width=\"100%\">'.format(file_url)
-            page = html + '<embed src=\"{}\" type=\"application/pdf\"   height=\"300px\" width=\"100%\">'.format(file_url)
+            page = html + '<embed src=\"{}\" type=\"application/pdf\"   height=\"768px\" width=\"100%\">'.format(file_url)
             page = page + print_args
             return page
 
@@ -88,12 +90,15 @@ def print_req():
             file_url = request.form.get('file_url')
             
             print_args = 'color_mode:{},sides:{},copys:{}'.format(color_mode, sides, copys)
-            
-            print('file_url=%s|color_mode=%s|sides=%s|copys=%s'%(file_url, color_mode, sides, copys))
-            key = '123456'
-            val = 'file_url={}|print_args={}'.format(file_url, print_args)
-            redis_client.set(key, val)
-            print('store redis %s=>%s'%(key, val))
+            request_id = str(uuid.uuid4())
+            timestamp = calendar.timegm(time.gmtime())
+            print('request_id=%s|file_url=%s|color_mode=%s|sides=%s|copys=%s'%(request_id, file_url, color_mode, sides, copys))
+            #request_id = str(uuid.uuid4())
+            #rs.hmset('zs',{'name':'lisi','age':18})
+            redis_client.hmset(request_id, {'file_url':file_url, 'color_mode':color_mode, 'sides':sides, 'copys':copys, 'timestamp':timestamp})
+            #val = 'file_url={}|print_args={}'.format(file_url, print_args)
+            #redis_client.set(key, val)
+            #print('store redis %s=>%s'%(key, val))
 
             return '打印任务提交成功！'
         else:
