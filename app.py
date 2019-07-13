@@ -2,13 +2,15 @@
 import os
 from flask import Flask, request, url_for, send_from_directory, render_template, redirect
 from werkzeug import secure_filename
+from flask_redis import FlaskRedis
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+REDIS_URL = "redis://:password@localhost:6379/0"
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = os.getcwd()
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-
+redis_client = FlaskRedis(app)
 
 html = '''
     <!DOCTYPE html>
@@ -84,7 +86,15 @@ def print_req():
             sides = request.form.get('sides')
             copys = request.form.get('copys')
             file_url = request.form.get('file_url')
+            
+            print_args = 'color_mode:{},sides:{},copys:{}'.format(color_mode, sides, copys)
+            
             print('file_url=%s|color_mode=%s|sides=%s|copys=%s'%(file_url, color_mode, sides, copys))
+            key = '123456'
+            val = 'file_url={}|print_args={}'.format(file_url, print_args)
+            redis_client.set(key, val)
+            print('store redis %s=>%s'%(key, val))
+
             return '打印任务提交成功！'
         else:
             return '打印参数错误！'
