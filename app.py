@@ -91,11 +91,20 @@ def print_req():
             
             print_args = 'color_mode:{},sides:{},copys:{}'.format(color_mode, sides, copys)
             request_id = str(uuid.uuid4())
+            dev_id = 'a46fd75c-a5e0-11e9-86f1-20689d49592c'
             timestamp = calendar.timegm(time.gmtime())
             print('request_id=%s|file_url=%s|color_mode=%s|sides=%s|copys=%s'%(request_id, file_url, color_mode, sides, copys))
             #request_id = str(uuid.uuid4())
             #rs.hmset('zs',{'name':'lisi','age':18})
-            redis_client.hmset(request_id, {'file_url':file_url, 'color_mode':color_mode, 'sides':sides, 'copys':copys, 'timestamp':timestamp})
+            #store print request info 
+            redis_client.hmset(request_id, {'file_url':file_url, \
+                                            'color_mode':color_mode, \
+                                            'sides':sides, \
+                                            'copys':copys, \
+                                            'dev_id':dev_id, \
+                                            'timestamp':timestamp})
+            # insert print request_id into redis list(print_req_list)
+            redis_client.lpush('print_req_list', request_id)
             #val = 'file_url={}|print_args={}'.format(file_url, print_args)
             #redis_client.set(key, val)
             #print('store redis %s=>%s'%(key, val))
