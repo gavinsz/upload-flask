@@ -6,7 +6,7 @@ import redis
 import socket
 from flask import Flask, request, url_for, send_from_directory, render_template, redirect
 from werkzeug import secure_filename
-from pip._internal.download import is_file_url
+#from pip._internal.download import is_file_url
 #from flask_redis import FlaskRedis
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
