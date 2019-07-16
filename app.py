@@ -18,7 +18,9 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = os.getcwd()
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 #redis_client = FlaskRedis(app)
-r = redis.Redis(host='192.168.100.38', port=6379, db=0)
+#r = redis.Redis(host='192.168.100.38', port=6379, db=0)
+r = redis.Redis(host='localhost', port=6379, db=0)
+
 
 html = '''
     <!DOCTYPE html>
@@ -107,11 +109,11 @@ def print_req():
             download_url = 'http://{}:{}{}'.format(get_host_ip(), listening_port, file)
             file_url = download_url
             
-            print_args = '{},{},{}'.format(color_mode, sides, copys)
+            print_args = 'color_mode={},sides={},copys={}'.format(color_mode, sides, copys)
             request_id = str(uuid.uuid4())
             dev_id = '9f3a3d62-a60e-11e9-86f1-20689d49592c'
             timestamp = calendar.timegm(time.gmtime())
-            print('request_id=%s|file_url=%s|color_mode=%s|sides=%s|copys=%s'%(request_id, file_url, color_mode, sides, copys))
+            print('request_id=%s|dev_id=%s|print_args=%s'%(request_id, dev_id, print_args))
             #store print request info
             try:
                 r.hmset(request_id, {'file_url':file_url, \
