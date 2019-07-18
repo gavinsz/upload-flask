@@ -107,15 +107,13 @@ def print_req():
         if color_mode:
             sides = request.form.get('sides')
             copys = request.form.get('copys')
-            file = request.form.get('file_url')
-            download_url = 'http://{}:{}{}'.format(get_host_ip(), listening_port, file)
-            file_url = download_url
+            file_url = request.form.get('file_url')
             
             print_args = 'color_mode={},sides={},copys={}'.format(color_mode, sides, copys)
             request_id = str(uuid.uuid4())
             dev_id = '9f3a3d62-a60e-11e9-86f1-20689d49592c'
             timestamp = calendar.timegm(time.gmtime())
-            print('request_id=%s|dev_id=%s|print_args=%s'%(request_id, dev_id, print_args))
+            print('request_id=%s|dev_id=%s|file_url=%s|print_args=%s'%(request_id, dev_id, file_url, print_args))
             #store print request info
             try:
                 r.hmset(request_id, {'file_url':file_url, \
