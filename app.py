@@ -19,7 +19,7 @@ app.config['UPLOAD_FOLDER'] = os.getcwd()
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 #redis_client = FlaskRedis(app)
 #r = redis.Redis(host='192.168.100.38', port=6379, db=0)
-r = redis.Redis(host='localhost', port=6379, db=0)
+r = redis.Redis(host='172.17.0.1', port=6379, db=0)
 
 
 html = '''
@@ -89,7 +89,7 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             pdf_file = filename + '.pdf'
-            cmd = 'curl --form file=@{} http://localhost:5000/unoconv/pdf/ > {}'.format(filename, pdf_file)
+            cmd = 'curl --form file=@{} http://172.17.0.1:5000/unoconv/pdf/ > {}'.format(filename, pdf_file)
             ret = os.popen(cmd).readlines()
             print('exec cmd %s|ret=%s'%(cmd, ret))
             file_url = url_for('uploaded_file', filename=pdf_file)
