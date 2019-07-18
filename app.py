@@ -57,7 +57,9 @@ function set_file_url(){
 var embed=document.getElementById("embed_pdf");
 var file_name = embed.getAttribute("src");
 var file_url = document.getElementById("file_url");
-file_url.value= file_name;
+var href = window.location.href;
+var name = file_name.substring(1);
+file_url.value= href + name;
 }
 set_file_url();
 </script>
